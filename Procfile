@@ -1,1 +1,1 @@
-web: java -Dquarkus.datasource.jdbc.url=$JDBC_DATABASE_URL -Dquarkus.datasource.username=$JDBC_DATABASE_USERNAME -Dquarkus.datasource.password=$JDBC_DATABASE_PASSWORD -jar target/quarkus-app/quarkus-run.jar
+web: java -jar target/quarkus-app/quarkus-run.jar
