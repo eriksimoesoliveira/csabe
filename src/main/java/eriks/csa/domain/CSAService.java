@@ -27,10 +27,10 @@ public class CSAService {
         long now = Instant.now().toEpochMilli();
         String token = UUID.randomUUID().toString();
         long tokenExpiration = Instant.now().plus( 30, ChronoUnit.MINUTES).toEpochMilli();
-        Login newLogin = new Login(userId, userName, password, now, token, tokenExpiration);
-        Login.save(newLogin);
+        Login login = new Login(userId, userName, password, now, token, tokenExpiration);
+        Login.save(login);
         new LoginAttempt(userId, userName, now).persist();
-        return newLogin;
+        return login;
     }
 
     @Transactional

@@ -26,12 +26,13 @@ public class CSAGameResource extends AuthenticatedResource {
 
     @Path("/login")
     @POST
-    public Response login(String payload, @Context HttpHeaders headers) {
+    public Response login(String payload) {
         try {
-            LoginDtoIn loginDtoIn = validate(payload, headers, LoginDtoIn.class);
+            LoginDtoIn loginDtoIn = deserialize(payload, LoginDtoIn.class);
             Login login = service.login(loginDtoIn.userId, loginDtoIn.userName, loginDtoIn.password);
             return Response.accepted().entity(LoginDtoOut.fromDomain(login)).build();
         } catch (UnauthorizedException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         } catch (Exception e) {
             e.printStackTrace();

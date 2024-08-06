@@ -16,19 +16,29 @@ public class CSAMetricsResource extends AuthenticatedResource {
     @Path("/pack-open")
     @POST
     public Response openPack(String payload, @Context HttpHeaders headers) {
-        service.validateToken(headers.getHeaderString("token"));
-        PackOpenDtoIn packOpenDtoIn = validate(payload, headers, PackOpenDtoIn.class);
-        service.savePackOpen(packOpenDtoIn.toDomain());
-        return Response.accepted().build();
+        try {
+            service.validateToken(headers.getHeaderString("token"));
+            PackOpenDtoIn packOpenDtoIn = deserialize(payload, PackOpenDtoIn.class);
+            service.savePackOpen(packOpenDtoIn.toDomain());
+            return Response.accepted().build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Path("/album-value")
     @PUT
     public Response albumValueUpdate(String payload, @Context HttpHeaders headers) {
-        service.validateToken(headers.getHeaderString("token"));
-        AlbumValueUpdateIn albumValueUpdateIn = validate(payload, headers, AlbumValueUpdateIn.class);
-        service.updateAlbumValue(albumValueUpdateIn.toDomain());
-        return Response.accepted().build();
+        try {
+            service.validateToken(headers.getHeaderString("token"));
+            AlbumValueUpdateIn albumValueUpdateIn = deserialize(payload, AlbumValueUpdateIn.class);
+            service.updateAlbumValue(albumValueUpdateIn.toDomain());
+            return Response.accepted().build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Path("/all")
