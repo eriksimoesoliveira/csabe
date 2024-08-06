@@ -1,5 +1,6 @@
 package eriks.csa.domain;
 
+import eriks.csa.domain.obj.*;
 import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -20,14 +21,28 @@ public class CSAService {
     }
 
     @Transactional
-    public Login login(String userId, String userName, String password) {
-        if (!password.equals(System.getenv("CSA_STATIC_PASSWORD"))) {
+    public Login login(String userId, String password) {
+        OpaUser user = OpaUser.findById(userId);
+        if (!password.equals(user.password)) {
             throw new UnauthorizedException("Invalid password");
         }
         long now = Instant.now().toEpochMilli();
         String token = UUID.randomUUID().toString();
         long tokenExpiration = Instant.now().plus( 30, ChronoUnit.MINUTES).toEpochMilli();
-        Login login = new Login(userId, userName, password, now, token, tokenExpiration);
+        Login login = new Login(userId, now, token, tokenExpiration);
+        Login.save(login);
+        new LoginAttempt(userId, user.userName, now).persist();
+        return login;
+    }
+
+    @Transactional
+    public Login signUp(String userName, String password) {
+        long now = Instant.now().toEpochMilli();
+        String token = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
+        long tokenExpiration = Instant.now().plus( 30, ChronoUnit.MINUTES).toEpochMilli();
+        new OpaUser(userId, userName, password, now).persist();
+        Login login = new Login(userId, now, token, tokenExpiration);
         Login.save(login);
         new LoginAttempt(userId, userName, now).persist();
         return login;

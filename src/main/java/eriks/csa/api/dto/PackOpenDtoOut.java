@@ -1,6 +1,6 @@
 package eriks.csa.api.dto;
 
-import eriks.csa.domain.PackOpen;
+import eriks.csa.domain.obj.PackOpen;
 
 public class PackOpenDtoOut {
     public String userId;

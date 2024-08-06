@@ -1,6 +1,6 @@
 package eriks.csa.api.dto;
 
-import eriks.csa.domain.AlbumValue;
+import eriks.csa.domain.obj.AlbumValue;
 
 import java.time.Instant;
 

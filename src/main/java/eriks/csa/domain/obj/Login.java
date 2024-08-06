@@ -1,4 +1,4 @@
-package eriks.csa.domain;
+package eriks.csa.domain.obj;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
@@ -10,19 +10,15 @@ import jakarta.transaction.Transactional;
 public class Login extends PanacheEntityBase {
     @Id
     public String userId;
-    public String userName;
-    public String password;
     public long timestamp;
     @Column
     public String token;
     @Column
     public Long tokenExpiration;
 
-    public Login(String userId, String userName, String password, long timestamp, String token, Long tokenExpiration) {
+    public Login(String userId, long timestamp, String token, Long tokenExpiration) {
         this.userId = userId;
-        this.userName = userName;
         this.timestamp = timestamp;
-        this.password = password;
         this.token = token;
         this.tokenExpiration = tokenExpiration;
     }
