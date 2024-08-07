@@ -5,6 +5,7 @@ import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,10 +16,6 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class CSAService {
-
-    public List<Login> getAllLogins() {
-        return Login.listAll();
-    }
 
     @Transactional
     public Login login(String userId, String password) {
@@ -67,17 +64,9 @@ public class CSAService {
         login.persist();
     }
 
-    public List<PackOpen> getAllPackOpen() {
-        return PackOpen.listAll();
-    }
-
     @Transactional
     public void savePackOpen(PackOpen packOpen) {
         packOpen.persist();
-    }
-
-    public List<AlbumValue> getAllAlbumValues() {
-        return AlbumValue.listAll();
     }
 
     @Transactional
@@ -97,12 +86,12 @@ public class CSAService {
         ret += "ALBUM VALUES\n\n";
         List<AlbumValue> albumValues = AlbumValue.listAll();
         for (AlbumValue albumValue : albumValues) {
-            ret += albumValue.userId + "\t" + albumValue.userName + "\t" + albumValue.value + "\t" + convertMillisToDateTime(albumValue.lastUpdate) + "\n";
+            ret += albumValue.userId + "\t" + albumValue.userName + "\t" + NumberFormat.getCurrencyInstance().format(albumValue.value) + "\t" + convertMillisToDateTime(albumValue.lastUpdate) + "\n";
         }
         ret += "\nPACKS\n\n";
         List<PackOpen> packageOpens = PackOpen.listAll();
         for (PackOpen pack : packageOpens) {
-            ret += pack.userId + "\t" + pack.userName + "\t" + pack.packId + "\t" + pack.packOrigin + "\t" + pack.packType + "\t" + convertMillisToDateTime(pack.timestamp) + "\n";
+            ret += pack.userId + "\t" + pack.userName + "\t" + pack.packOrigin + "\t" + pack.packType + "\t" + convertMillisToDateTime(pack.timestamp) + "\t" + pack.packId + "\n";
         }
         ret += "\nLOGINS\n\n";
         List<LoginAttempt> logins = LoginAttempt.listAll();
@@ -115,7 +104,7 @@ public class CSAService {
 
     public static String convertMillisToDateTime(long millis) {
         Instant instant = Instant.ofEpochMilli(millis);
-        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("America/Edmonton"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return dateTime.format(formatter);
     }
