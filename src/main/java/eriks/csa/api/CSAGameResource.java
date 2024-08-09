@@ -3,16 +3,27 @@ package eriks.csa.api;
 import eriks.csa.api.dto.LoginDtoIn;
 import eriks.csa.api.dto.LoginDtoOut;
 import eriks.csa.api.dto.SignUpDtoIn;
+import eriks.csa.domain.CSAService;
 import eriks.csa.domain.obj.Login;
+import eriks.csa.domain.obj.OPAPackage;
 import io.quarkus.security.UnauthorizedException;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestPath;
+
+import java.util.List;
 
 @Path("/csa")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CSAGameResource extends AuthenticatedResource {
+
+    @Inject
+    CSAService service;
 
     @Path("/ping")
     @GET
@@ -52,4 +63,16 @@ public class CSAGameResource extends AuthenticatedResource {
         }
     }
 
+    @Path("/fetch-packages/{userName}")
+    @GET
+    public List<OPAPackage> fetchPackage(@RestPath String userName, @Context HttpHeaders headers) {
+        service.validateToken(headers.getHeaderString("token"));
+        return service.getPackagesByUser(userName);
+    }
+
+    @Path("/version")
+    @GET
+    public List<String> getAvailableVersions() {
+        return List.of("1.4.0", "1.5.0");
+    }
 }

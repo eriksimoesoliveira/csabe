@@ -2,6 +2,8 @@ package eriks.csa.api;
 
 import eriks.csa.api.dto.AlbumValueUpdateIn;
 import eriks.csa.api.dto.PackOpenDtoIn;
+import eriks.csa.domain.CSAService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -12,6 +14,9 @@ import jakarta.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CSAMetricsResource extends AuthenticatedResource {
+
+    @Inject
+    CSAService service;
 
     @Path("/pack-open")
     @POST

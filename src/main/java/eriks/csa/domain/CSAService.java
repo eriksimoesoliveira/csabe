@@ -19,7 +19,7 @@ public class CSAService {
 
     @Transactional
     public Login login(String userId, String password) {
-        OpaUser user = OpaUser.findById(userId);
+        GameUser user = GameUser.findById(userId);
         if (!password.equals(user.password)) {
             throw new UnauthorizedException("Invalid password");
         }
@@ -38,7 +38,7 @@ public class CSAService {
         String token = UUID.randomUUID().toString();
         String userId = UUID.randomUUID().toString();
         long tokenExpiration = Instant.now().plus( 30, ChronoUnit.MINUTES).toEpochMilli();
-        new OpaUser(userId, userName, password, now).persist();
+        new GameUser(userId, userName, password, now).persist();
         Login login = new Login(userId, now, token, tokenExpiration);
         Login.save(login);
         new LoginAttempt(userId, userName, now).persist();
@@ -107,5 +107,19 @@ public class CSAService {
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("America/Edmonton"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return dateTime.format(formatter);
+    }
+
+    @Transactional
+    public List<OPAPackage> getPackagesByUser(String userName) {
+        List<OPAPackage> unclaimedByOwner = OPAPackage.findUnclaimedByOwner(userName);
+        unclaimedByOwner.forEach(pack -> {
+            pack.isClaimed = true;
+            pack.persist();
+        });
+        return unclaimedByOwner;
+    }
+
+    public List<OPAPackage> getAllPackages() {
+        return OPAPackage.listAll();
     }
 }
