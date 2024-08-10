@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestPath;
 
 import java.util.List;
 
@@ -60,6 +61,14 @@ public class OPAAdminResource {
     public List<OPAPackage> fetchPackage(@Context HttpHeaders headers) {
         validateAdminKey(headers.getHeaderString("adminKey"));
         return csaService.getAllPackages();
+    }
+
+    @Path("/user-cleanup/{userId}")
+    @PUT
+    public Response userCleanUp(@RestPath String userId, @Context HttpHeaders headers) {
+        validateAdminKey(headers.getHeaderString("adminKey"));
+        csaService.userCleanUp(userId);
+        return Response.accepted().build();
     }
 
     private void validateAdminKey(String key) {

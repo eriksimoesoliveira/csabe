@@ -122,4 +122,11 @@ public class CSAService {
     public List<OPAPackage> getAllPackages() {
         return OPAPackage.listAll();
     }
+
+    @Transactional
+    public void userCleanUp(String userId) {
+        AlbumValue.delete("userId", userId);
+        PackOpen.delete("userId", userId);
+        LoginAttempt.delete("userId", userId);
+    }
 }
