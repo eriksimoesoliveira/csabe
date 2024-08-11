@@ -3,6 +3,7 @@ package eriks.csa.api;
 import eriks.csa.api.dto.AlbumValueUpdateIn;
 import eriks.csa.api.dto.PackOpenDtoIn;
 import eriks.csa.domain.CSAService;
+import io.quarkus.security.UnauthorizedException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -26,6 +27,9 @@ public class CSAMetricsResource extends AuthenticatedResource {
             PackOpenDtoIn packOpenDtoIn = deserialize(payload, PackOpenDtoIn.class);
             service.savePackOpen(packOpenDtoIn.toDomain());
             return Response.accepted().build();
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         } catch (Exception ex) {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -40,6 +44,9 @@ public class CSAMetricsResource extends AuthenticatedResource {
             AlbumValueUpdateIn albumValueUpdateIn = deserialize(payload, AlbumValueUpdateIn.class);
             service.updateAlbumValue(albumValueUpdateIn.toDomain());
             return Response.accepted().build();
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         } catch (Exception ex) {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
