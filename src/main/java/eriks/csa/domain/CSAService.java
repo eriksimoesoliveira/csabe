@@ -84,17 +84,17 @@ public class CSAService {
         String ret = "";
 
         ret += "ALBUM VALUES\n\n";
-        List<AlbumValue> albumValues = AlbumValue.listAll();
+        List<AlbumValue> albumValues = AlbumValue.list("order by lastUpdate");
         for (AlbumValue albumValue : albumValues) {
             ret += albumValue.userId + "\t" + albumValue.userName + "\t" + NumberFormat.getCurrencyInstance().format(albumValue.value) + "\t" + convertMillisToDateTime(albumValue.lastUpdate) + "\n";
         }
         ret += "\nPACKS\n\n";
-        List<PackOpen> packageOpens = PackOpen.listAll();
+        List<PackOpen> packageOpens = PackOpen.list("order by timestamp");
         for (PackOpen pack : packageOpens) {
             ret += pack.userId + "\t" + pack.userName + "\t" + pack.packOrigin + "\t" + pack.packType + "\t" + convertMillisToDateTime(pack.timestamp) + "\t" + pack.packId + "\n";
         }
         ret += "\nLOGINS\n\n";
-        List<LoginAttempt> logins = LoginAttempt.listAll();
+        List<LoginAttempt> logins = LoginAttempt.list("order by timestamp");
         for (LoginAttempt login : logins) {
             ret += login.userId + "\t" + login.userName + "\t" + convertMillisToDateTime(login.timestamp) + "\n";
         }
