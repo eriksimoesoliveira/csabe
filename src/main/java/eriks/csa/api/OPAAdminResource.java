@@ -1,5 +1,6 @@
 package eriks.csa.api;
 
+import eriks.csa.api.dto.AngelDtoIn;
 import eriks.csa.domain.CSAService;
 import eriks.csa.domain.OPAService;
 import eriks.csa.domain.obj.Match;
@@ -26,10 +27,18 @@ public class OPAAdminResource {
     @Inject
     CSAService csaService;
 
+    @Path("/member/save-angel")
+    @PUT
+    public Response saveAngel(AngelDtoIn angelDtoIn, @Context HttpHeaders headers) {
+        //validateAdminKey(headers.getHeaderString("adminKey")); #todo add this later
+        opaService.saveAngels(angelDtoIn.newAngels, angelDtoIn.oldAngels);
+        return Response.accepted().build();
+    }
+
     @Path("/member")
     @POST
     public Response saveMember(Member member, @Context HttpHeaders headers) {
-        validateAdminKey(headers.getHeaderString("adminKey"));
+        //validateAdminKey(headers.getHeaderString("adminKey"));
         opaService.saveMember(member);
         return Response.accepted().build();
     }
