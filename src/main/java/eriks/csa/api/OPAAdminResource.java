@@ -29,8 +29,7 @@ public class OPAAdminResource {
 
     @Path("/member/save-angel")
     @PUT
-    public Response saveAngel(AngelDtoIn angelDtoIn, @Context HttpHeaders headers) {
-        //validateAdminKey(headers.getHeaderString("adminKey")); #todo add this later
+    public Response saveAngel(AngelDtoIn angelDtoIn) {
         opaService.saveAngels(angelDtoIn.newAngels, angelDtoIn.oldAngels);
         return Response.accepted().build();
     }
