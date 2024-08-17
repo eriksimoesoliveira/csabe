@@ -73,6 +73,6 @@ public class CSAGameResource extends AuthenticatedResource {
     @Path("/version")
     @GET
     public List<String> getAvailableVersions() {
-        return List.of("1.7.1");
+        return List.of("1.7.2");
     }
 }

@@ -74,6 +74,7 @@ public class CSAService {
         AlbumValue found = AlbumValue.find("userId", albumValue.userId).firstResult();
         if (found != null) {
             found.value = albumValue.value;
+            found.lastUpdate = Instant.now().toEpochMilli();
             found.persist();
         } else {
             albumValue.persist();
