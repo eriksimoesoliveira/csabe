@@ -37,7 +37,7 @@ public class OPAAdminResource {
     @Path("/member")
     @POST
     public Response saveMember(Member member, @Context HttpHeaders headers) {
-        //validateAdminKey(headers.getHeaderString("adminKey"));
+        validateAdminKey(headers.getHeaderString("adminKey"));
         opaService.saveMember(member);
         return Response.accepted().build();
     }
