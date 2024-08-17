@@ -1,19 +1,53 @@
 package eriks.csa.domain;
 
+import eriks.csa.api.client.DiscordClient;
+import eriks.csa.api.dto.DiscordMessageDtoOut;
 import eriks.csa.domain.obj.Match;
 import eriks.csa.domain.obj.Member;
 import eriks.csa.domain.obj.OPAPackage;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.text.DateFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class OPAService {
+
+    @Inject
+    @RestClient
+    DiscordClient discordClient;
+
+    @Transactional
+    public void saveAngels(List<String> newAngels, List<String> oldAngels) {
+        getAllMembers().forEach(member -> {
+            if (newAngels.contains(member.faceitNick)) {
+                member.hasAngel = true;
+            } else if (oldAngels.contains(member.faceitNick)) {
+                member.hasAngel = false;
+            } else {
+                return;
+            }
+            saveMember(member);
+        });
+        sendAngelMessageToDiscord();
+    }
+
+    public void sendAngelMessageToDiscord() {
+        String listOfPlayers = getAllMembers().stream()
+                                              .filter(member -> member.hasAngel)
+                                              .map(member -> member.faceitNick)
+                                              .collect(Collectors.joining(", "));
+        DiscordMessageDtoOut message = new DiscordMessageDtoOut("Anjos atuais: "+listOfPlayers);
+        discordClient.sendMessage(message);
+    }
 
     @Transactional
     public void saveMember(Member member) {
