@@ -27,8 +27,6 @@ public class OPAService {
 
     @Transactional
     public void saveAngels(List<String> newAngels, List<String> oldAngels) {
-        System.out.println("entrou");
-        Logger.getAnonymousLogger().severe(newAngels.toString());
         getAllMembers().forEach(member -> {
             if (newAngels.contains(member.faceitNick)) {
                 member.hasAngel = true;
@@ -37,7 +35,6 @@ public class OPAService {
             } else {
                 return;
             }
-            Logger.getAnonymousLogger().severe(member.toString());
             saveMember(member);
         });
         sendAngelMessageToDiscord();
@@ -49,7 +46,6 @@ public class OPAService {
                                               .map(member -> member.faceitNick)
                                               .collect(Collectors.joining(", "));
         DiscordMessageDtoOut message = new DiscordMessageDtoOut("Anjos atuais: "+listOfPlayers);
-        Logger.getAnonymousLogger().severe("worked");
         discordClient.sendMessage(message);
     }
 
