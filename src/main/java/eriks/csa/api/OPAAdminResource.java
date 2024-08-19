@@ -1,6 +1,7 @@
 package eriks.csa.api;
 
 import eriks.csa.api.dto.AngelDtoIn;
+import eriks.csa.api.dto.MemberDtoIn;
 import eriks.csa.domain.CSAService;
 import eriks.csa.domain.OPAService;
 import eriks.csa.domain.obj.Match;
@@ -36,9 +37,9 @@ public class OPAAdminResource {
 
     @Path("/member")
     @POST
-    public Response saveMember(Member member, @Context HttpHeaders headers) {
+    public Response saveMember(MemberDtoIn member, @Context HttpHeaders headers) {
         validateAdminKey(headers.getHeaderString("adminKey"));
-        opaService.saveMember(member);
+        opaService.saveMember(member.toDomain());
         return Response.accepted().build();
     }
 

@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -32,10 +31,7 @@ public class OPAService {
                 member.hasAngel = true;
             } else if (oldAngels.contains(member.faceitNick)) {
                 member.hasAngel = false;
-            } else {
-                return;
             }
-            saveMember(member);
         });
         sendAngelMessageToDiscord();
     }
@@ -51,7 +47,18 @@ public class OPAService {
 
     @Transactional
     public void saveMember(Member member) {
-        member.persist();
+        Member.findByIdOptional(member.steamId).ifPresentOrElse(
+                entity -> {
+                    Member existingMember = (Member) entity;
+                    existingMember.faceitNick = member.faceitNick;
+                    existingMember.isSecondaryAccount = member.isSecondaryAccount;
+                    existingMember.joinDate = member.joinDate;
+                    existingMember.country = member.country;
+                    existingMember.hasAngel = member.hasAngel;
+                    existingMember.primaryAccountFaceitNick = member.primaryAccountFaceitNick;
+                },
+                () -> member.persist()
+        );
     }
 
     public List<Member> getAllMembers() {
