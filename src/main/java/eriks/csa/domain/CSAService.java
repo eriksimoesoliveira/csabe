@@ -121,7 +121,7 @@ public class CSAService {
     }
 
     public List<OPAPackage> getAllPackages() {
-        return OPAPackage.listAll();
+        return OPAPackage.list("order by creationDate");
     }
 
     @Transactional
