@@ -85,7 +85,7 @@ public class CSAService {
         String ret = "";
 
         ret += "ALBUM VALUES\n\n";
-        List<AlbumValue> albumValues = AlbumValue.list("order by lastUpdate");
+        List<AlbumValue> albumValues = AlbumValue.list("order by value desc");
         for (AlbumValue albumValue : albumValues) {
             ret += albumValue.userId + "\t" + albumValue.userName + "\t" + NumberFormat.getCurrencyInstance().format(albumValue.value) + "\t" + convertMillisToDateTime(albumValue.lastUpdate) + "\n";
         }
