@@ -1,16 +1,15 @@
 package eriks.csa.domain.obj;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.annotation.Nullable;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
-import java.util.Optional;
+import jakarta.persistence.Id;
 
 @Entity
-public class Member extends PanacheEntity {
-    public String faceitNick;
+public class Member extends PanacheEntityBase {
+    @Id
     public String steamId;
+    public String faceitNick;
     public boolean isSecondaryAccount;
     public long joinDate;
     public String country;
@@ -19,7 +18,7 @@ public class Member extends PanacheEntity {
     @Column(nullable = true)
     public String primaryAccountFaceitNick;
 
-    public Member(String faceitNick, String steamId, boolean isSecondaryAccount, long joinDate, String country, boolean hasAngel, String primaryAccountFaceitNick) {
+    public Member(String steamId, String faceitNick, boolean isSecondaryAccount, long joinDate, String country, boolean hasAngel, String primaryAccountFaceitNick) {
         this.faceitNick = faceitNick;
         this.steamId = steamId;
         this.isSecondaryAccount = isSecondaryAccount;
