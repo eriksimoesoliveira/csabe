@@ -30,4 +30,12 @@ public class OPAPackage extends PanacheEntity {
     public static List<OPAPackage> findUnclaimedByOwner(String userName) {
         return find("owner = ?1 and isClaimed = false", userName).list();
     }
+
+    public static Integer totalPacksByUserName(String userName) {
+        return (int) count("owner = ?1", userName);
+    }
+
+    public static Integer totalOpenPacksByUserName(String userName) {
+        return (int) count("isOpen = true and owner = ?1", userName);
+    }
 }

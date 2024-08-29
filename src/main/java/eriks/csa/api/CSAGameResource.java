@@ -2,6 +2,7 @@ package eriks.csa.api;
 
 import eriks.csa.api.dto.LoginDtoIn;
 import eriks.csa.api.dto.LoginDtoOut;
+import eriks.csa.api.dto.RankingDtoOut;
 import eriks.csa.api.dto.SignUpDtoIn;
 import eriks.csa.domain.CSAService;
 import eriks.csa.domain.obj.Login;
@@ -16,6 +17,7 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestPath;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/csa")
 @Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +75,13 @@ public class CSAGameResource extends AuthenticatedResource {
     @Path("/version")
     @GET
     public List<String> getAvailableVersions() {
-        return List.of("1.7.2");
+        return List.of("1.8.0");
+    }
+
+    @Path("/ranking")
+    @GET
+    public List<RankingDtoOut> getRanking(@Context HttpHeaders headers) {
+        service.validateToken(headers.getHeaderString("token"));
+        return service.getRanking().stream().map(RankingDtoOut::fromDomain).collect(Collectors.toList());
     }
 }

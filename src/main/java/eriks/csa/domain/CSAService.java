@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CSAService {
@@ -102,6 +103,17 @@ public class CSAService {
         }
 
         return ret;
+    }
+
+    public List<AlbumValue> getAlbumValues() {
+        return AlbumValue.list("order by value desc");
+    }
+
+    public List<Ranking> getRanking() {
+        List<AlbumValue> albumValueList = AlbumValue.list("order by value desc");
+        return albumValueList.stream().map(ab ->
+            new Ranking(ab.userName, ab.value, OPAPackage.totalOpenPacksByUserName(ab.userName), OPAPackage.totalPacksByUserName(ab.userName))
+        ).collect(Collectors.toList());
     }
 
     public static String convertMillisToDateTime(long millis) {
