@@ -36,6 +36,6 @@ public class OPAPackage extends PanacheEntity {
     }
 
     public static Integer totalOpenPacksByUserName(String userName) {
-        return (int) count("isOpen = true and owner = ?1", userName);
+        return (int) count("owner = ?1 and isClaimed = true", userName);
     }
 }
